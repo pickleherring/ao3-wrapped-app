@@ -31,17 +31,10 @@ Inspired by and adapted from the work of the amazing [bothermione](https://www.b
 username = streamlit.sidebar.text_input('username')
 password = streamlit.sidebar.text_input('password', type='password')
 
-n_results = streamlit.sidebar.slider(
-    'number of top results',
-    min_value=2,
-    max_value=10,
-    value=5
-)
-
 if username and password:
 
     response = wrapped.resolve_request(username, password)
-    results = wrapped.analysis(response, n=n_results)
+    results = wrapped.analysis(response, n=10)
 
     streamlit.subheader(username)
 
