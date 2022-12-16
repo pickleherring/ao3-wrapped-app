@@ -81,5 +81,5 @@ if username and password:
 
 streamlit.markdown("""
 ---
-See the source code for this app [here](https://github.com/pickleherring/ao3-wrapped).
+See the source code for this app [here](https://github.com/pickleherring/ao3-wrapped-app).
 """)
