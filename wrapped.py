@@ -12,7 +12,11 @@ import requests
 
 
 YEAR = 2022
-N_TOP = 5
+N_TOP = 10
+
+
+class InvalidUserOrPasswordError(Exception):
+    pass
 
 
 def return_session(username, password):
@@ -34,6 +38,12 @@ def return_session(username, password):
 def get_pages(base_url, session):
     request = session.get(base_url)
     soup = bs4.BeautifulSoup(request.content, 'html.parser')
+
+    error_flash = soup.find("div", {"class": "flash error"})
+    if error_flash is not None:
+        error_msg = error_flash.text
+        raise InvalidUserOrPasswordError(error_msg)
+    
     pages = soup.find("ol", { "class": "pagination actions" })
     all_pages = []
     for li in pages.findAll('li'):
@@ -185,5 +195,5 @@ if __name__ == "__main__":
 
     data = analysis(resolve_request(username, password))
 
-    with open("results.json", mode="w") as f:
+    with open(f"results_{username}.json", mode="w") as f:
         json.dump(data, f, indent=2)

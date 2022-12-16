@@ -26,15 +26,29 @@ streamlit.markdown("""
 Inspired by and adapted from the work of the amazing [bothermione](https://www.bothermione.com/wrapped)!
 
 **No, you probably shouldn't enter your username and password into a random webpage, so don't actually use this. It's just for me.**
+
+---
 """)
+
+progress_container = streamlit.empty()
+progress_container.caption('fetching results...')
 
 username = streamlit.sidebar.text_input('username')
 password = streamlit.sidebar.text_input('password', type='password')
 
+valid_user = False
+
 if username and password:
 
-    response = wrapped.resolve_request(username, password)
-    results = wrapped.analysis(response, n=10)
+    try:
+        response = wrapped.resolve_request(username, password)
+        valid_user = True
+    except wrapped.InvalidUserOrPasswordError:
+        streamlit.caption('Invalid username or password.')
+
+if valid_user:
+
+    results = wrapped.analysis(response)
 
     streamlit.subheader(username)
 
@@ -71,8 +85,12 @@ if username and password:
             
             else:
                 streamlit.markdown('**none!**')
+    
+    with progress_container.container():
+        streamlit.caption('done!')
 
 streamlit.markdown("""
 ---
+
 See the source code for this app [here](https://github.com/pickleherring/ao3-wrapped-app).
 """)
