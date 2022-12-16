@@ -31,7 +31,6 @@ Inspired by and adapted from the work of the amazing [bothermione](https://www.b
 """)
 
 progress_container = streamlit.empty()
-progress_container.caption('fetching results...')
 
 username = streamlit.sidebar.text_input('username')
 password = streamlit.sidebar.text_input('password', type='password')
@@ -44,9 +43,13 @@ if username and password:
         response = wrapped.resolve_request(username, password)
         valid_user = True
     except wrapped.InvalidUserOrPasswordError:
-        streamlit.caption('Invalid username or password.')
+        with progress_container.container():
+            streamlit.caption('Invalid username or password.')
 
 if valid_user:
+    
+    with progress_container.container():
+        streamlit.caption('fetching results...')
 
     results = wrapped.analysis(response)
 
