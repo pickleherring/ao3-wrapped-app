@@ -38,6 +38,9 @@ password = streamlit.sidebar.text_input('password', type='password')
 valid_user = False
 
 if username and password:
+    
+    with progress_container.container():
+        streamlit.caption('fetching results...')
 
     try:
         response = wrapped.resolve_request(username, password)
@@ -47,9 +50,6 @@ if username and password:
             streamlit.caption('Invalid username or password.')
 
 if valid_user:
-    
-    with progress_container.container():
-        streamlit.caption('fetching results...')
 
     results = wrapped.analysis(response)
 
